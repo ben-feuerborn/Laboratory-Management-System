@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collect Sample - CLMS</title>
+  <link rel="stylesheet" th:href="@{/css/system.css}" href="/css/system.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+          <div style="font-weight:700">Clinical Lab Management</div>
+          <div class="muted-small">Collect Sample</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn" title="Settings">⚙️</button>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="text-align:right">
+            <div style="font-weight:700">Username</div>
+            <div class="muted-small">Lab Tech/Specimen Collector</div>
+          </div>
+          <div style="width:40px;height:40px;border-radius:8px;background:#e6eefc;display:flex;align-items:center;justify-content:center">UN</div>
+        </div>
+        <div>
+          <button class="btn" onclick="goHome()">Home</button>
+        </div>
+        <div>
+          <button class="btn" onclick="history.back()">Back</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="padding:16px; display:flex; justify-content:center;">
+      <div class="column-left" style="width:100%; max-width:900px;">
+
+        <div class="card">
+          <h1>Collect Sample</h1>
+
+          <form id="collectSampleForm">
+            <div>
+              <label for="patientId">Patient ID:</label>
+              <input type="text" id="patientId">
+            </div>
+            <div>
+              <label for="patientName">Patient Name:</label>
+              <input type="text" id="patientName">
+            </div>
+
+            <div>
+              <label for="testId">Test ID:</label>
+              <input type="text" id="testId">
+            </div>
+            <div>
+              <label for="testName">Test Name:</label>
+              <input type="text" id="testName">
+            </div>
+
+            <div>
+              <label for="sampleType">Sample Type:</label>
+              <select id="sampleType" required>
+                <option value="">Select...</option>
+                <option value="blood">Blood</option>
+                <option value="urine">Urine</option>
+                <option value="tissue">Tissue</option>
+                <option value="swab">Swab</option>
+              </select>
+            </div>
+            <div>
+              <label for="collectorName">Collector Name:</label>
+              <input type="text" id="collectorName">
+            </div>
+
+            <div>
+              <label for="collectionDate">Collection Date:</label>
+              <input type="datetime-local" id="collectionDate" value="">
+            </div>
+            <div>
+              <label for="sampleId">Sample ID:</label>
+              <input type="text" id="sampleId">
+            </div>
+
+            <div class="barcode-section" style="margin-top:12px; margin-bottom:12px;">
+              <h3>Barcode</h3>
+              <span id="barcode">| | | | | | | | | |</span>
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <button type="button" class="btn" id="printBtn" onclick="printBarcode()">Print Barcode</button>
+            </div>
+
+            <div class="confirmation" style="margin-bottom:12px;">
+              <input type="checkbox" id="confirmCollected" required>
+              <label for="confirmCollected">I confirm specimen successfully collected and labeled.</label>
+            </div>
+
+            <div class="submit-section">
+              <button type="submit" class="btn">Submit Collection</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Autofill current datetime
+    document.getElementById('collectionDate').value = new Date().toISOString().slice(0,16);
+
+    let barcodePrinted = false;
+
+    function printBarcode() {
+      if (barcodePrinted) {
+        alert("Barcode already printed. Only one print allowed.");
+        return;
+      }
+
+      const barcodeText = document.getElementById('sampleId').value;
+      const printWindow = window.open('', '_blank', 'width=400,height=300');
+      printWindow.document.write(`<pre style="font-size:24px; text-align:center;">Barcode: ${barcodeText}</pre>`);
+      printWindow.print();
+      printWindow.close();
+
+      barcodePrinted = true;
+      document.getElementById('printBtn').disabled = true;
+      document.getElementById('printBtn').textContent = "Printed";
+    }
+
+    document.getElementById('collectSampleForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!barcodePrinted) {
+        alert("Please print the barcode before submitting.");
+        return;
+      }
+      alert("Sample collected successfully and recorded in system!");
+      this.reset();
+      document.getElementById('printBtn').disabled = false;
+      document.getElementById('printBtn').textContent = "Print Barcode";
+      barcodePrinted = false;
+    });
+  </script>
+</body>
+<script>
+  (function(){
+    function setCookie(n,v,d){var e='';if(d){var t=new Date();t.setTime(t.getTime()+d*24*60*60*1000);e=';expires='+t.toUTCString()}document.cookie=n+'='+encodeURIComponent(v||'')+e+';path=/';}
+    function getCookie(n){var m=document.cookie.match('(^|;)\\s*'+n+'=([^;]+)');return m?decodeURIComponent(m[2]):null}
+    var p=window.location.pathname;
+    if(p.indexOf('/UserDashboards/')!==-1 || /Dashboard/.test(p)) setCookie('lastDashboard',p,7);
+    window.goHome=function(){var l=getCookie('lastDashboard');window.location.href=l||'/';}
+  })();
+</script>
+</html>

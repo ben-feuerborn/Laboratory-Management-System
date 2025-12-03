@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Patient & Provider List</title>
+
+    <!-- Global CLMS Styles -->
+    <link rel="stylesheet" th:href="@{/patient-provider/css/system.css}" />
+
+    <!-- Page-Specific Styles -->
+    <link rel="stylesheet" th:href="@{/patient-provider/css/patient-list.css}" />
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">CL</div>
+                <div>
+                    <div class="title">Clinical Lab Management</div>
+                    <div class="subtitle">Patients & Providers</div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" title="Settings">⚙️</button>
+                <button class="btn" onclick="history.back()">Back</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="container">
+                <div class="card">
+                    <h1 id="pageTitle">Patients & Providers</h1>
+
+                    <button class="btn add-btn" id="addBtn" type="button">Add</button>
+
+                    <div class="summary-grid">
+                        <div class="menu-card">
+                            <h2 th:text="${patients.size()}">0</h2>
+                            <p>Total Patients</p>
+                        </div>
+                        <div class="menu-card">
+                            <h2 th:text="${providersCount}">0</h2>
+                            <p>Providers</p>
+                        </div>
+                    </div>
+                    <div class="card toolbar-card">
+                        <div class="toolbar">
+                            <label for="dataset" class="control-label">Dataset</label>
+                            <select id="dataset" class="control-select">
+                                <option value="patients" selected>Patients</option>
+                                <option value="providers">Providers</option>
+                                <option value="medications">Medications</option>
+                                <option value="tests">Tests</option>
+                                <option value="reports">Reports</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h2 class="table-title" id="tableTitle">Patient Data</h2>
+
+                    <table id="patientTable" class="styled-table">
+                        <thead id="dataHead">
+                            <tr id="headRow">
+                                <th>Patient ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Medical History</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataBody">
+                            <tr th:each="p : ${patients}">
+                                <td th:text="${p.id}"></td>
+                                <td th:text="${p.firstName}"></td>
+                                <td th:text="${p.lastName}"></td>
+                                <td th:text="${p.dateOfBirth}"></td>
+                                <td th:text="${p.gender}"></td>
+                                <td th:text="${p.phone}"></td>
+                                <td th:text="${p.email}"></td>
+                                <td th:text="${p.address}"></td>
+                                <td th:text="${p.medicalHistory}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <script>
+const headConfigs = {
+  patients: ["Patient ID","First Name","Last Name","DOB","Gender","Phone","Email","Address","Medical History"],
+  providers: ["Provider ID","Name","Specialty","Phone","Email"],
+  medications: ["Medication ID","Name","Dosage","Frequency","Notes"],
+  tests: ["Test ID","Test Name","Category","Status","Ordered Date","Result Date"],
+  reports: ["Report ID","Title","Type","Created","Author"]
+};
+
+// Determine if we're behind gateway (e.g., path starts with /patient-provider)
+const pathPrefix = (() => {
+  const p = window.location.pathname.split('/').filter(Boolean); // remove empty
+  if (p.length > 0 && p[0] === 'patient-provider') { return '/patient-provider'; }
+  return ''; // direct service access
+})();
+
+function apiUrl(resource){
+  return `${pathPrefix}/api/${resource}`;
+}
+
+const endpointMap = {
+  providers: apiUrl('providers'),
+  medications: apiUrl('medications'),
+  tests: apiUrl('tests'),
+  reports: apiUrl('reports')
+};
+
+function renderHead(dataset) {
+  document.getElementById('headRow').innerHTML = headConfigs[dataset].map(h=>`<th>${h}</th>`).join('');
+}
+function formatRow(dataset, item){
+  if(dataset === 'reports'){
+    const link = item.id && item.filePath && !item.filePath.startsWith('ERROR:') ? `<a href='${(pathPrefix||'')}/api/reports/${item.id}/pdf' target='_blank'>PDF</a>` : '—';
+    return `<tr><td>${item.id}</td><td>${item.title||''}</td><td>${item.type||''}</td><td>${item.createdDate||''}</td><td>${item.author||''}</td><td>${link}</td></tr>`;
+  }
+  switch(dataset){
+    case 'providers': return `<tr><td>${item.id}</td><td>${item.name||''}</td><td>${item.specialty||''}</td><td>${item.phone||''}</td><td>${item.email||''}</td></tr>`;
+    case 'medications': return `<tr><td>${item.id}</td><td>${item.name||''}</td><td>${item.dosage||''}</td><td>${item.frequency||''}</td><td>${item.notes||''}</td></tr>`;
+    case 'tests': return `<tr><td>${item.id}</td><td>${item.testName||''}</td><td>${item.category||''}</td><td>${item.status||''}</td><td>${item.orderedDate||''}</td><td>${item.resultDate||''}</td></tr>`;
+    default: return '';
+  }
+}
+async function loadDataset(dataset){
+  const body = document.getElementById('dataBody');
+  if(dataset === 'patients'){ return; }
+  body.innerHTML = `<tr><td colspan='${headConfigs[dataset].length}'>Loading ${dataset}...</td></tr>`;
+  try {
+    const resp = await fetch(endpointMap[dataset]);
+    if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if(!Array.isArray(data) || data.length === 0){
+      body.innerHTML = `<tr><td colspan='${headConfigs[dataset].length}'>No ${dataset} found.</td></tr>`;
+      return;
+    }
+    body.innerHTML = data.map(d => formatRow(dataset, d)).join('');
+  } catch(err){
+    body.innerHTML = `<tr><td colspan='${headConfigs[dataset].length}'>Error loading ${dataset}: ${err.message}</td></tr>`;
+  }
+}
+const selector = document.getElementById('dataset');
+selector.addEventListener('change', e => {
+  const ds = e.target.value;
+  renderHead(ds);
+  loadDataset(ds);
+  updateAddButtonLabel(ds);
+  updateTableTitle(ds);
+  ensureGenerateButton(ds);
+});
+function updateAddButtonLabel(ds){
+  const addBtn = document.getElementById('addBtn');
+  const pageTitle = document.getElementById('pageTitle');
+  switch(ds){
+    case 'patients': addBtn.textContent = 'Add Patient'; pageTitle.textContent='Patients'; break;
+    case 'providers': addBtn.textContent = 'Add Provider'; pageTitle.textContent='Providers'; break;
+    case 'medications': addBtn.textContent = 'Add Medication'; pageTitle.textContent='Medications'; break;
+    case 'tests': addBtn.textContent = 'Add Test Record'; pageTitle.textContent='Test Records'; break;
+    case 'reports': addBtn.textContent = 'Add Report'; pageTitle.textContent='Reports'; break;
+  }
+}
+function updateTableTitle(ds){
+  const t = document.getElementById('tableTitle');
+  t.textContent = ds.charAt(0).toUpperCase() + ds.slice(1) + ' Data';
+}
+function ensureGenerateButton(ds){
+  let existing = document.getElementById('generateBtn');
+  let typeSelect = document.getElementById('reportTypeSelect');
+  if(ds === 'reports'){
+    if(!typeSelect){
+      typeSelect = document.createElement('select');
+      typeSelect.id = 'reportTypeSelect';
+      typeSelect.className = 'control-select';
+      ['inventory','sales','compliance'].forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t; opt.textContent = t.charAt(0).toUpperCase()+t.slice(1);
+        typeSelect.appendChild(opt);
+      });
+      document.getElementById('dataset').insertAdjacentElement('afterend', typeSelect);
+    }
+    if(!existing){
+      existing = document.createElement('button');
+      existing.id = 'generateBtn';
+      existing.className = 'btn';
+      existing.style.marginLeft = '12px';
+      existing.textContent = 'Generate Report';
+      document.getElementById('addBtn').insertAdjacentElement('afterend', existing);
+      existing.addEventListener('click', async () => {
+        const selType = typeSelect.value;
+        existing.disabled = true; existing.textContent='Generating...';
+        try {
+          const resp = await fetch((pathPrefix||'') + '/api/reports/generate?type=' + encodeURIComponent(selType), { method:'POST' });
+          if(!resp.ok) throw new Error('HTTP '+resp.status);
+          loadDataset('reports');
+        } catch(e){
+          alert('Failed: '+e.message);
+        } finally {
+          existing.disabled = false; existing.textContent='Generate Report';
+        }
+      });
+    }
+  } else {
+    if(existing) existing.remove();
+    if(typeSelect) typeSelect.remove();
+  }
+}
+// initialize button
+updateAddButtonLabel('patients');
+// dataset change hook
+selector.addEventListener('change', e => {
+  const ds = e.target.value;
+  updateAddButtonLabel(ds);
+});
+document.getElementById('addBtn').addEventListener('click', () => {
+  navigateToAdd(selector.value);
+});
+function navigateToAdd(ds){
+  const base = pathPrefix; // '' or '/patient-provider'
+  const rel = (p)=> base + p;
+  let target;
+  switch(ds){
+    case 'patients': target = rel('/add'); break;
+    case 'providers': target = rel('/add/provider'); break;
+    case 'medications': target = rel('/add/medication'); break;
+    case 'tests': target = rel('/add/test'); break;
+    case 'reports': target = rel('/add/report'); break;
+    default: target = rel('/');
+  }
+  window.location.href = target;
+}
+                    </script>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+</body>
+
+</html>

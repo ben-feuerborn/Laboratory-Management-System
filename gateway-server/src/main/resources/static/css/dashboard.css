@@ -1,0 +1,86 @@
+/* --- Dashboard Layout --- */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* --- Module Cards Grid --- */
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Make module-card work for both <a> and <div> */
+.module-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.7rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.module-card h2 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+}
+
+.module-card.future {
+    opacity: .55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* --- Notifications Panel --- */
+.notifications {
+    background: #f7f7f7;
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: fit-content;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notifications h2 {
+    margin-top: 0;
+}
+
+/* Notification Cards */
+.notif-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.notif-card h3 {
+    margin: 0 0 .3rem 0;
+}
+
+.notif-card .time {
+    font-size: .8rem;
+    opacity: .6;
+}
+
+/* Notification Colors */
+.notif-card.critical {
+    border-left: 6px solid #d9534f;
+}
+
+.notif-card.warning {
+    border-left: 6px solid #f0ad4e;
+}
+
+.notif-card.normal {
+    border-left: 6px solid #5cb85c;
+}

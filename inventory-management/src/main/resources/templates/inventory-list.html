@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory List</title>
+
+    <!-- Global CLMS Styles -->
+    <link rel="stylesheet" th:href="@{/inventory/css/system.css}">
+
+    <!-- Page-Specific Styles -->
+    <link rel="stylesheet" th:href="@{/inventory/css/inventory-list.css}">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">CL</div>
+                <div>
+                    <div class="title">Clinical Lab Management</div>
+                    <div class="subtitle">Inventory List</div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn">⚙️</button>
+                <button class="btn" onclick="history.back()">Back</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="container">
+                <div class="card">
+                    <h1>Inventory Overview</h1>
+
+                    <!-- Corrected Add Item Link -->
+                    <a th:href="@{/inventory/add}" class="btn add-btn">Add New Item</a>
+
+                    <!-- Summary Cards -->
+                    <div class="summary-grid">
+                        <div class="menu-card" id="reagentCard">
+                            <h2 id="reagentsCount">0</h2>
+                            <p>Reagents</p>
+                        </div>
+                        <div class="menu-card" id="testKitCard">
+                            <h2 id="testKitsCount">0</h2>
+                            <p>Test Kits</p>
+                        </div>
+                        <div class="menu-card" id="consumableCard">
+                            <h2 id="consumablesCount">0</h2>
+                            <p>Consumables</p>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Table -->
+                    <h2 class="table-title">Inventory Data</h2>
+
+                    <table id="inventoryTable" class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Test Type</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Expiration Date</th>
+                                <th>Date Entered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="item : ${items}">
+                                <td th:text="${item.id}"></td>
+                                <td th:text="${item.testType}"></td>
+                                <td th:text="${item.name}"></td>
+                                <td th:text="${item.quantity}"></td>
+                                <td th:text="${item.expirationDate}"></td>
+                                <td th:text="${item.dateEntered}"></td>
+
+                                <td class="action-cell">
+                                    <div class="dropdown">
+                                        <span class="menu-dots">⋮</span>
+                                        <div class="dropdown-content">
+                                            <!-- Correct Thymeleaf paths -->
+                                            <a th:href="@{'/inventory/edit/' + ${item.id}}">Edit</a>
+                                            <a th:href="@{'/inventory/delete/' + ${item.id}}"
+                                                class="delete-btn">Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        function updateSummaryCards() {
+            const rows = document.querySelectorAll("#inventoryTable tbody tr");
+
+            let reagentQty = 0;
+            let testKitQty = 0;
+            let consumableQty = 0;
+
+            rows.forEach(row => {
+                const type = row.children[1].textContent.trim().toLowerCase();
+                const qty = parseInt(row.children[3].textContent.trim()) || 0;
+
+                if (type === "reagent") reagentQty += qty;
+                else if (type === "test kit" || type === "test_kit") testKitQty += qty;
+                else if (type === "consumable") consumableQty += qty;
+            });
+
+            document.getElementById("reagentsCount").textContent = reagentQty;
+            document.getElementById("testKitsCount").textContent = testKitQty;
+            document.getElementById("consumablesCount").textContent = consumableQty;
+
+            updateCardColor(document.getElementById("reagentCard"), reagentQty);
+            updateCardColor(document.getElementById("testKitCard"), testKitQty);
+            updateCardColor(document.getElementById("consumableCard"), consumableQty);
+        }
+
+        function updateCardColor(card, qty) {
+            card.classList.remove("low", "critical", "normal");
+
+            if (qty <= 2000) card.classList.add("critical");
+            else if (qty <= 4000) card.classList.add("low");
+            else card.classList.add("normal");
+        }
+
+        updateSummaryCards();
+    </script>
+
+</body>
+
+</html>

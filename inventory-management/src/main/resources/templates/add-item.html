@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Inventory Item</title>
+
+    <!-- Global CLMS Styles -->
+    <link rel="stylesheet" th:href="@{/inventory/css/system.css}">
+
+    <!-- Page-Specific Styles -->
+    <link rel="stylesheet" th:href="@{/inventory/css/add-item.css}">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">CL</div>
+                <div>
+                    <div class="title">Clinical Lab Management</div>
+                    <div class="subtitle">Add Inventory Item</div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn">⚙️</button>
+                <button class="btn" onclick="history.back()">Back</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="container">
+                <div class="card form-card">
+                    <h1>Add New Inventory Item</h1>
+
+                    <form th:action="@{/inventory/save}" th:object="${item}" method="post">
+                        <div class="form-group">
+                            <label for="testType">Test Type</label>
+                            <select th:field="*{testType}">
+                                <option th:each="type : ${testTypes}" th:value="${type}" th:text="${type}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Item Name</label>
+                            <input type="text" id="name" th:field="*{name}" placeholder="Enter item name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" th:field="*{quantity}" placeholder="Enter quantity" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expirationDate">Expiration Date</label>
+                            <input type="date" id="expirationDate" th:field="*{expirationDate}" required>
+                        </div>
+
+                        <button type="submit" class="btn add-btn">Add Item</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+
+</html>

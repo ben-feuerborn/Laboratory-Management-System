@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lab Test Request - CLMS</title>
+    <link rel="stylesheet" th:href="@{/css/system.css}" href="/css/system.css">
+</head>
+<body>
+  <div class="app">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+          <div style="font-weight:700">Clinical Lab Management</div>
+          <div class="muted-small">Lab Test Request</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn" title="Settings">⚙️</button>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="text-align:right">
+            <div style="font-weight:700">Username</div>
+            <div class="muted-small">Physician/Cashier</div>
+          </div>
+          <div style="width:40px;height:40px;border-radius:8px;background:#e6eefc;display:flex;align-items:center;justify-content:center">UN</div>
+        </div>
+                <div>
+                    <button class="btn" onclick="goHome()">Home</button>
+                </div>
+                <div>
+                    <button class="btn" onclick="history.back()">Back</button>
+                </div>
+      </div>
+    </header>
+
+    <main style="padding:16px; display:flex; justify-content:center;">
+      <div class="column-left" style="width:100%; max-width:900px;">
+
+        <div class="card">
+            <h1>Lab Test Request</h1>
+            <p class="lead">Enter patient, physician, and specimen information. Fields marked with * are required.</p>
+
+            <form id="labForm" th:action="@{/test-requests}" th:object="${testRequest}" method="post" autocomplete="off">
+
+                <div th:if="${success}" class="alert-success" style="margin-bottom:12px;padding:8px;border-radius:6px;background:#e6ffea;border:1px solid #a6f0be;color:#064c2e;">
+                    <span th:text="${success}"></span>
+                </div>
+
+                <!-- Request Information -->
+                <div class="section">
+                    <h2>Request Information</h2>
+                    <div class="grid">
+                        <div>
+                            <label for="reportId">Request Id *</label>
+                            <input id="reportId" th:field="*{reportId}" required />
+                        </div>
+                        <div>
+                            <label for="reportDate">Request Date *</label>
+                            <input id="reportDate" th:field="*{reportDate}" type="date" required />
+                        </div>
+                        <div>
+                            <label for="reportTime">Request Time *</label>
+                            <input id="reportTime" th:field="*{reportTime}" type="time" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patient Information -->
+                <div class="section">
+                    <h2>Patient Information</h2>
+                    <div class="grid">
+                        <div>
+                            <label for="patientId">Patient Id *</label>
+                            <input id="patientId" th:field="*{patientId}" required />
+                        </div>
+                        <div>
+                            <label for="patientName">Patient Name *</label>
+                            <input id="patientName" th:field="*{patientName}" required />
+                        </div>
+                        <div>
+                            <label for="dateOfBirth">Date of Birth *</label>
+                            <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" required />
+                        </div>
+                        <div>
+                            <label for="sex">Sex *</label>
+                            <select id="sex" th:field="*{sex}" required>
+                                <option value="">--</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="contactNumber">Contact Number</label>
+                            <input id="contactNumber" name="contactNumber" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ordering Physician Information -->
+                <div class="section">
+                    <h2>Ordering Physician</h2>
+                    <div class="grid">
+                        <div>
+                            <label for="physicianId">Physician Id *</label>
+                            <input id="physicianId" th:field="*{physicianId}" required />
+                        </div>
+                        <div>
+                            <label for="physicianName">Physician Name *</label>
+                            <input id="physicianName" th:field="*{physicianName}" required />
+                        </div>
+                        <div>
+                            <label for="physicianContact">Physician Contact</label>
+                            <input id="physicianContact" name="physicianContact" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Collection Information -->
+                <div class="section">
+                    <h2>Sample Collection</h2>
+                    <div class="grid">
+                        <div>
+                            <label for="sampleType">Sample Type *</label>
+                            <select id="sampleType" th:field="*{sampleType}" required>
+                                <option value="">--</option>
+                                <option value="Blood">Blood</option>
+                                <option value="Urine">Urine</option>
+                                <option value="Tissue">Tissue</option>
+                                <option value="Swab">Swab</option>
+                                <option value="Stool">Stool</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="sampleId">Sample Id *</label>
+                            <input id="sampleId" th:field="*{sampleId}" required />
+                        </div>
+                        <div>
+                            <label for="collectionDate">Collection Date *</label>
+                            <input id="collectionDate" th:field="*{collectionDate}" type="date" required />
+                        </div>
+                        <div>
+                            <label for="collectionTime">Collection Time *</label>
+                            <input id="collectionTime" th:field="*{collectionTime}" type="time" required />
+                        </div>
+                        <div>
+                            <label for="collectionLocation">Collection Location</label>
+                            <input id="collectionLocation" name="collectionLocation" />
+                        </div>
+                        <div>
+                            <label for="collectionTechnicianId">Technician Id *</label>
+                            <input id="collectionTechnicianId" th:field="*{collectionTechnicianId}" required />
+                        </div>
+                        <div>
+                            <label for="collectionTechnicianName">Technician Name *</label>
+                            <input id="collectionTechnicianName" th:field="*{collectionTechnicianName}" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tests Requested -->
+                <div class="section">
+                    <h2>Requested Tests *</h2>
+                    <textarea id="testsRequested" name="testsRequested" placeholder="List the tests to be performed" required></textarea>
+                </div>
+
+                <!-- Payment / Insurance -->
+                <div class="section">
+                    <h2>Insurance / Billing</h2>
+                    <div class="grid">
+                        <div>
+                            <label for="billingType">Billing Type *</label>
+                            <select id="billingType" name="billingType" required>
+                                <option value="">--</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Self-Pay">Self-Pay</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="insuranceProvider">Insurance Provider</label>
+                            <input id="insuranceProvider" th:field="*{insuranceProvider}" />
+                        </div>
+                        <div>
+                            <label for="insurancePolicyNumber">Insurance Policy Number</label>
+                            <input id="insurancePolicyNumber" th:field="*{insurancePolicyNumber}" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions" style="margin-top:16px;">
+                    <button type="submit" class="btn">Submit Request</button>
+                    <button type="reset" class="btn">Clear Form</button>
+                </div>
+
+            </form>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+<script>
+    (function(){
+        function setCookie(n,v,d){var e='';if(d){var t=new Date();t.setTime(t.getTime()+d*24*60*60*1000);e=';expires='+t.toUTCString()}document.cookie=n+'='+encodeURIComponent(v||'')+e+';path=/';}
+        function getCookie(n){var m=document.cookie.match('(^|;)\\s*'+n+'=([^;]+)');return m?decodeURIComponent(m[2]):null}
+        var p=window.location.pathname;
+        if(p.indexOf('/UserDashboards/')!==-1 || /Dashboard/.test(p)) setCookie('lastDashboard',p,7);
+        window.goHome=function(){var l=getCookie('lastDashboard');window.location.href=l||'/';}
+    })();
+</script>
+</html>

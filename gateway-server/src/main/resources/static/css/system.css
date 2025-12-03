@@ -1,0 +1,240 @@
+/* system.css - Reusable styles for CLMS dashboards */
+
+:root {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --danger: #ef4444;
+  --success: #10b981;
+  --glass: rgba(255, 255, 255, 0.8);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: #111827;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: 64px 1fr;
+  padding: 16px;
+  gap: 16px;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Top bar */
+header.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--card), #f8fafc);
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+}
+.nav-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.search {
+  background: #eef2ff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(16, 24, 40, 0.04);
+}
+.icon-btn {
+  background: transparent;
+  border: 0;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Main layout */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+}
+.column-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* KPI cards */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.card {
+  background: var(--card);
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(2, 6, 23, 0.04);
+}
+.kpi-title {
+  font-size: 12px;
+  color: var(--muted);
+}
+.kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Modules and grids */
+.modules {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+.wide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* List/table styles */
+.list {
+  background: var(--card);
+  padding: 12px;
+  border-radius: 10px;
+  min-height: 120px;
+}
+.list h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+}
+th {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Sidebar */
+aside.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.notifications {
+  background: var(--card);
+  padding: 12px;
+  border-radius: 10px;
+}
+.notif {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 0;
+}
+.notif .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 6px;
+}
+.dot.warn { background: #f59e0b; }
+.dot.err { background: var(--danger); }
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border: 0;
+  cursor: pointer;
+}
+.muted { color: var(--muted); font-size: 13px; }
+
+/* Calendar widget */
+.calendar {
+  background: var(--card);
+  padding: 12px;
+  border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+  .kpis { grid-template-columns: repeat(3, 1fr); }
+  .modules { grid-template-columns: 1fr; }
+  .main { grid-template-columns: 1fr 360px; }
+}
+@media (max-width: 760px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .main { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+}
+
+/* Small text helpers */
+.muted-small { color: var(--muted); font-size: 12px; }
+.tiny { font-size: 12px; }
+
+/* Chart placeholder */
+.chart-placeholder {
+  height: 160px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fbfdff, #f0f9ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.btn-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db; /* light gray border */
+    border-radius: 8px;
+    background-color: #f9fafb; /* subtle card background */
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-checkbox input[type="checkbox"] {
+    margin-right: 10px;
+}

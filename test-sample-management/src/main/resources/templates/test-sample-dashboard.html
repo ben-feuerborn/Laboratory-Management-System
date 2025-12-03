@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test Sample Management Dashboard</title>
+    
+    <link rel="stylesheet" th:href="@{/css/system.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">CL</div>
+                <div>
+                    <div class="title">Clinical Lab Management</div>
+                    <div class="subtitle">Test Sample Management Dashboard</div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn">⚙️</button>
+                <button class="btn" onclick="history.back()">Back</button>
+            </div>
+        </header>
+
+        <main class="dashboard-dash">
+            <section class="module-grid">
+                <a class="module-card" th:href="@{/test-sample/cashier}">
+                    <h2>Cashier Dashboard</h2>
+                    <p>Coming soon...</p>
+                </a>
+
+                <a class="module-card" th:href="@{/test-sample/lab-manager}">
+                    <h2>Lab Manager Dashboard</h2>
+                    <p>Coming soon...</p>
+                </a>
+
+                <a class="module-card" th:href="@{/test-sample/lab-tech}">
+                    <h2>Lab Technician Dashboard</h2>
+                    <p>Coming soon...</p>
+                </a>
+
+                <a class="module-card" th:href="@{/test-sample/pathologist}">
+                    <h2>Pathologist Dashboard</h2>
+                    <p>Coming soon...</p>
+                </a>
+
+                <a class="module-card" th:href="@{/test-sample/patient}">
+                    <h2>Patient Dashboard</h2>
+                    <p>Coming soon...</p>
+                </a>
+
+                <a class="module-card" th:href="@{/test-sample/physician}">
+                    <h2>Physician Dashboard</h2>
+                    <p>Coming soon...</p>
+                </a>
+
+                <a class="module-card" th:href="@{/test-sample/specimen-collector}">
+                    <h2>Specimen Collector Dashboard</h2>
+                    <p>Coming soon...</p>
+                </a>
+
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

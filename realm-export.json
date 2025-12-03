@@ -1,0 +1,146 @@
+{
+  "realm": "realm-lab",
+  "enabled": true,
+
+  "roles": {
+    "realm": [
+      {
+        "name": "lab-admin",
+        "composite": true,
+        "composites": {
+          "client": {
+            "lab": ["ADMIN"]
+          }
+        }
+      },
+      {
+        "name": "lab-user",
+        "composite": true,
+        "composites": {
+          "client": {
+            "lab": ["USER"]
+          }
+        }
+      }
+    ],
+    "client": {
+      "lab": [
+        { "name": "ADMIN" },
+        { "name": "USER" }
+      ]
+    }
+  },
+
+  "clients": [
+    {
+      "clientId": "lab",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "bearerOnly": false,
+      "fullScopeAllowed": true,
+
+      "redirectUris": ["http://localhost:80*"],
+      "webOrigins": ["*"],
+
+      "attributes": {
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "backchannel.logout.revoke.offline.tokens": "false"
+      },
+
+      "defaultClientScopes": [
+        "roles",
+        "profile",
+        "email",
+        "web-origins",
+        "acr"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ],
+
+      "authorizationServicesEnabled": true,
+      "authorizationSettings": {
+        "allowRemoteResourceManagement": true,
+        "policyEnforcementMode": "ENFORCING",
+        "resources": [
+          {
+            "name": "Default Resource",
+            "type": "urn:lab:resources:default",
+            "ownerManagedAccess": false,
+            "uris": ["/*"]
+          }
+        ],
+        "policies": [
+          {
+            "name": "Default Policy",
+            "description": "Grants access to all authenticated users",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "roles": "[{\"id\":\"lab-user\",\"required\":false}]"
+            }
+          }
+        ],
+        "decisionStrategy": "UNANIMOUS"
+      }
+    }
+  ],
+
+  "users": [
+    {
+      "username": "lab-admin",
+      "enabled": true,
+      "emailVerified": false,
+      "email": "lab-admin@gmail.com",
+      "firstName": "Admin",
+      "lastName": "Lab",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "lab-admin",
+        "default-roles-realm-lab"
+      ],
+      "clientRoles": {
+        "lab": ["ADMIN"]
+      }
+    },
+    {
+      "username": "lab-user",
+      "enabled": true,
+      "email": "lab-user@gmail.com",
+      "firstName": "User",
+      "lastName": "Lab",
+      "emailVerified": false,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "lab-user",
+        "default-roles-realm-lab"
+      ],
+      "clientRoles": {
+        "lab": ["USER"]
+      }
+    }
+  ]
+}
+
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Test - CLMS</title>
+    <link rel="stylesheet" th:href="@{/css/system.css}" href="/css/system.css">
+</head>
+<body>
+<div class="app">
+
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+          <div style="font-weight:700">Clinical Lab Management</div>
+          <div class="muted-small">Purchase Test Information</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn" title="Settings">⚙️</button>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="text-align:right">
+            <div style="font-weight:700">Username</div>
+            <div class="muted-small">Cashier/Physician</div>
+          </div>
+          <div style="width:40px;height:40px;border-radius:8px;background:#e6eefc;display:flex;align-items:center;justify-content:center">UN</div>
+        </div>
+        <!-- Back Button -->
+        <div>
+          <button class="btn" onclick="goHome()">Home</button>
+        </div>
+        <div>
+          <button class="btn" onclick="history.back()">Back</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="padding:16px; display:flex; justify-content:center;">
+      <div class="column-left" style="width:100%; max-width:700px;">
+
+        <!-- Form Card -->
+        <div class="card">
+            <h1>Purchase Test Information</h1>
+            <form id="purchaseForm" action="/purchase" method="post">
+
+                <label for="patientName">Patient Name *</label>
+                <input type="text" id="patientName" name="patientName" required>
+
+                <label for="patientId">Patient ID *</label>
+                <input type="text" id="patientId" name="patientId" required>
+
+                <label style="display:block; margin-bottom:8px; margin-top: 8px;">Select Test(s) *</label>
+
+                <div class="checkbox-group" style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
+                    <label class="btn-checkbox"><input type="checkbox" name="tests" value="CBC|50"> CBC - $50</label>
+                    <label class="btn-checkbox"><input type="checkbox" name="tests" value="Urinalysis|30"> Urinalysis - $30</label>
+                    <label class="btn-checkbox"><input type="checkbox" name="tests" value="Blood Glucose|40"> Blood Glucose - $40</label>
+                    <label class="btn-checkbox"><input type="checkbox" name="tests" value="Cholesterol|35"> Cholesterol - $35</label>
+                </div>
+
+
+                <div style="margin-top:16px;">
+                  <button type="submit" class="btn">Proceed to Purchase</button>
+                </div>
+
+            </form>
+        </div>
+
+      </div>
+    </main>
+
+</div>
+
+<script>
+  // Basic client-side validation: ensure at least one test selected.
+  const form = document.getElementById('purchaseForm');
+  form.addEventListener('submit', (e) => {
+    const selectedTests = Array.from(document.querySelectorAll('input[name="tests"]:checked'))
+                   .map(cb => cb.value);
+
+    if (selectedTests.length === 0) {
+      e.preventDefault();
+      alert('Please select at least one test.');
+    }
+    // otherwise, allow the form to submit normally to the server (/purchase)
+  });
+</script>
+</body>
+<script>
+  (function(){
+    function setCookie(n,v,d){var e='';if(d){var t=new Date();t.setTime(t.getTime()+d*24*60*60*1000);e=';expires='+t.toUTCString()}document.cookie=n+'='+encodeURIComponent(v||'')+e+';path=/';}
+    function getCookie(n){var m=document.cookie.match('(^|;)\\s*'+n+'=([^;]+)');return m?decodeURIComponent(m[2]):null}
+    var p=window.location.pathname;
+    if(p.indexOf('/UserDashboards/')!==-1 || /Dashboard/.test(p)) setCookie('lastDashboard',p,7);
+    window.goHome=function(){var l=getCookie('lastDashboard');window.location.href=l||'/';}
+  })();
+</script>
+</html>

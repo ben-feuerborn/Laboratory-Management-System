@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clinical Lab - Approve Test Results</title>
+    <link rel="stylesheet" th:href="@{/css/system.css}" href="/css/system.css">
+    <style>
+        h1 {
+            margin: 20px 0;
+            font-size: 24px;
+        }
+
+        #testCardsContainer {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .test-card {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .test-card h2 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: var(--accent);
+        }
+
+        .field {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 4px 0;
+        }
+
+        .field span {
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .approve-button {
+            align-self: flex-end;
+            margin-top: 8px;
+            padding: 8px 14px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .approve-button:hover {
+            background: #0f9d72;
+        }
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+            <div style="font-weight:700">Clinical Lab Management</div>
+            <div class="muted-small">Approve Test Results</div>
+        </div>
+    </div>
+
+    <div class="nav-actions">
+        <button class="icon-btn" title="Settings">⚙️</button>
+        <div style="display:flex;align-items:center;gap:10px">
+            <div style="text-align:right">
+                <div style="font-weight:700">Username</div>
+                <div class="muted-small">Manager/Lab Tech/Pathologist</div>
+            </div>
+            <div style="width:40px;height:40px;border-radius:8px;background:#e6eefc;display:flex;align-items:center;justify-content:center">UN</div>
+        </div>
+        <div>
+            <button class="btn" onclick="goHome()">Home</button>
+        </div>
+        <div>
+            <button class="btn" onclick="history.back()">Back</button>
+        </div>
+    </div>
+</header>
+
+<div class="app">
+    <div class="main">
+        <div class="column-left">
+            <h1>Test Results Pending Approval</h1>
+            <div id="testCardsContainer"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    fetch("/test-results/pending") // your Spring endpoint
+        .then(res => res.json())
+        .then(testResults => {
+            const container = document.getElementById("testCardsContainer");
+            container.innerHTML = "";
+
+            testResults.forEach(test => {
+                const card = document.createElement("div");
+                card.className = "test-card";
+
+                card.innerHTML = `
+                    <h2>Report ID: ${test.reportID}</h2>
+                    <div class="field"><span>Report Date & Time:</span> ${test.reportDateTime ?? ""}</div>
+                    <div class="field"><span>Patient ID:</span> ${test.patientID}</div>
+                    <div class="field"><span>Patient Name:</span> ${test.patientName}</div>
+                    <div class="field"><span>DOB:</span> ${test.dob ?? ""}</div>
+                    <div class="field"><span>Gender:</span> ${test.gender}</div>
+                    <div class="field"><span>Physician ID:</span> ${test.physicianID}</div>
+                    <div class="field"><span>Physician Name:</span> ${test.physicianName}</div>
+                    <div class="field"><span>Sample Type:</span> ${test.sampleType}</div>
+                    <div class="field"><span>Sample ID:</span> ${test.sampleID}</div>
+                    <div class="field"><span>Collection Date & Time:</span> ${test.collectionDateTime ?? ""}</div>
+                    <div class="field"><span>Collected By:</span> ${test.collectedBy ?? ""}</div>
+                    <div class="field"><span>Test Performed By:</span> ${test.testPerformedBy ?? ""}</div>
+                    <div class="field"><span>Machine:</span> ${test.machine ?? ""}</div>
+                    <div class="field"><span>Test Name:</span> ${test.testName}</div>
+                    <div class="field"><span>Result Values:</span> ${test.resultValues ?? ""}</div>
+                    <div class="field"><span>Units:</span> ${test.units ?? ""}</div>
+                    <div class="field"><span>Reference Range:</span> ${test.referenceRange ?? ""}</div>
+                    <div class="field"><span>Status:</span> ${test.resultStatus ?? ""}</div>
+                    <div class="field"><span>Results Received:</span> ${test.resultsReceivedDateTime ?? ""}</div>
+                    <div class="field"><span>Insurance Provider:</span> ${test.insuranceProvider ?? ""}</div>
+                    <div class="field"><span>Insurance Policy:</span> ${test.insurancePolicy ?? ""}</div>
+
+                    <button class="approve-button" onclick="approveTest(${test.id})">Approve</button>
+                `;
+
+                container.appendChild(card);
+            });
+        })
+        .catch(err => console.error("Error loading test results:", err));
+
+    function approveTest(id) {
+        fetch(`/test-results/approve/${id}`, { method: "POST" })
+            .then(() => location.reload())
+            .catch(err => console.error("Approval failed:", err));
+    }
+</script>
+
+<script>
+    (function(){
+        function setCookie(n,v,d){var e='';if(d){var t=new Date();t.setTime(t.getTime()+d*24*60*60*1000);e=';expires='+t.toUTCString()}document.cookie=n+'='+encodeURIComponent(v||'')+e+';path=/';}
+        function getCookie(n){var m=document.cookie.match('(^|;)\\s*'+n+'=([^;]+)');return m?decodeURIComponent(m[2]):null}
+        var p=window.location.pathname; if(p.indexOf('/UserDashboards/')!==-1 || /Dashboard/.test(p)) setCookie('lastDashboard',p,7);
+        window.goHome=function(){var l=getCookie('lastDashboard');window.location.href=l||'/';}
+    })();
+</script>
+
+</body>
+</html>

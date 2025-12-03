@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clinical Lab - Patient List</title>
+    <link rel="stylesheet" th:href="@{/css/system.css}" href="/css/system.css">
+</head>
+<body>
+    <div class="app">
+
+        <!-- Top Navigation Bar -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">CL</div>
+                <div>
+                    <div style="font-weight:700">Clinical Lab Management</div>
+                    <div class="muted-small">Patient List</div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" title="Settings">⚙️</button>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <div style="text-align:right">
+                        <div style="font-weight:700">Username</div>
+                        <div class="muted-small">Physician</div>
+                    </div>
+                    <div style="width:40px;height:40px;border-radius:8px;background:#e6eefc;display:flex;align-items:center;justify-content:center">UN</div>
+                </div>
+
+                <div>
+                    <button class="btn" onclick="goHome()">Home</button>
+                </div>
+                <div>
+                    <button class="btn" onclick="history.back()">Back</button>
+                </div>
+            </div>
+            
+        </header>
+
+        <!-- Main Content Area -->
+        <main style="padding:16px; display:flex; justify-content:center;">
+            <div class="column-left" style="width:100%; max-width:1200px;">
+
+
+                <div class="card">
+                    <h1>Your Patients</h1>
+                    <p class="lead">These are the patients under your care, click view to see their test results.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Contact</th>
+                                <th>More Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                            <!-- Rows will be loaded from CSV -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Load unique patients from /api/test-results and render patient list
+        function computeAge(dob) {
+            if (!dob) return '';
+            try {
+                const b = new Date(dob);
+                const diff = Date.now() - b.getTime();
+                const ageDt = new Date(diff);
+                return Math.abs(ageDt.getUTCFullYear() - 1970);
+            } catch (e) { return ''; }
+        }
+
+        async function loadPatientList() {
+            try {
+                const res = await fetch('/api/test-results');
+                const data = await res.json();
+
+                const map = new Map();
+                data.forEach(r => {
+                    const id = r.patientID || '';
+                    const name = r.patientName || '';
+                    const dob = r.dob || '';
+                    const gender = r.gender || '';
+                    const key = id || name; // fallback when id missing
+                    if (!map.has(key)) {
+                        map.set(key, { id, name, dob, gender });
+                    }
+                });
+
+                const tableBody = document.getElementById('resultsTableBody');
+                tableBody.innerHTML = '';
+
+                map.forEach(p => {
+                    const tr = document.createElement('tr');
+                    const idTd = document.createElement('td'); idTd.textContent = p.id || '';
+                    const nameTd = document.createElement('td'); nameTd.textContent = p.name || '';
+                    const ageTd = document.createElement('td'); ageTd.textContent = computeAge(p.dob);
+                    const genderTd = document.createElement('td'); genderTd.textContent = p.gender || '';
+                    const contactTd = document.createElement('td'); contactTd.textContent = ''; // no contact field in TestResult
+
+                    const detailsTd = document.createElement('td');
+                    const btn = document.createElement('button'); btn.classList.add('btn'); btn.textContent = 'View';
+                    btn.addEventListener('click', () => {
+                        const url = new URL(window.location.origin + '/TestandSampleManagementPages/PatientTestResultList.html');
+                        if (p.id) url.searchParams.set('patientId', p.id);
+                        else if (p.name) url.searchParams.set('patientName', p.name);
+                        window.location.href = url.toString();
+                    });
+                    detailsTd.appendChild(btn);
+
+                    tr.appendChild(idTd);
+                    tr.appendChild(nameTd);
+                    tr.appendChild(ageTd);
+                    tr.appendChild(genderTd);
+                    tr.appendChild(contactTd);
+                    tr.appendChild(detailsTd);
+
+                    tableBody.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error('Failed to load patients:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPatientList);
+    </script>
+</body>
+<script>
+    (function(){
+        function setCookie(n,v,d){var e='';if(d){var t=new Date();t.setTime(t.getTime()+d*24*60*60*1000);e=';expires='+t.toUTCString()}document.cookie=n+'='+encodeURIComponent(v||'')+e+';path=/';}
+        function getCookie(n){var m=document.cookie.match('(^|;)\\s*'+n+'=([^;]+)');return m?decodeURIComponent(m[2]):null}
+        var p=window.location.pathname;
+        if(p.indexOf('/UserDashboards/')!==-1 || /Dashboard/.test(p)) setCookie('lastDashboard',p,7);
+        window.goHome=function(){var l=getCookie('lastDashboard');window.location.href=l||'/';}
+    })();
+</script>
+</html>

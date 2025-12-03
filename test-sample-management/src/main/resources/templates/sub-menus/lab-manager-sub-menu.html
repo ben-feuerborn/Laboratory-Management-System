@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>CLMS - Test & Sample Management</title>
+
+  <link rel="stylesheet" th:href="@{/css/system.css}">
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+          <div class="title">Clinical Lab Management</div>
+          <div class="subtitle">Lab Manager Sub-Menu</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn">⚙️</button>
+        <button class="btn" onclick="history.back()">Back</button>
+        <button class="btn" onclick="goHome()">Home</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-dash">
+      <section class="module-grid">
+        <a class="module-card" th:href="@{/test-sample/test-requests/verify-request}">
+          <!-- ../TestandSampleManagementPages/VerifyTestRequest.html -->
+          <h2>📋 View Test Requests</h2>
+          <p>Browse and manage all incoming test orders.</p>
+        </a>
+
+        <a class="module-card future" th:href="@{/test-sample/}">
+          <h2>🧪 Sample Tracking</h2>
+          <p>Track specimen collection, processing, and delivery status.</p>
+        </a>
+
+        <a class="module-card" th:href="@{/test-sample/test-results}">
+          <!-- ../TestandSampleManagementPages/TrackTestResults.html -->
+          <h2>🔍 Test Tracking</h2>
+          <p>Monitor all test progress, sample status, and results in one place.</p>
+        </a>
+
+        <a class="module-card" th:href="@{/test-sample/test-results/pending}">
+          <!-- ../TestandSampleManagementPages/TestResultsPendingApproval.html -->
+          <h2>⏳ Pending Results</h2>
+          <p>View test results awaiting validation or review.</p>
+        </a>
+
+        <a class="module-card" th:href="@{/test-sample/test-results/add}">
+          <!-- ../TestandSampleManagementPages/TestResultEntry.html -->
+          <h2>✍️ Enter Test Results</h2>
+          <p>Manually input test results or import from CSV.</p>
+        </a>
+
+        <a class="module-card" th:href="@{/test-sample/test-results/approved}">
+          <!-- ../TestandSampleManagementPages/ApprovedTestResultsList.html -->
+          <h2>✅ Approved Results</h2>
+          <p>View finalized and validated results.</p>
+        </a>
+
+      </section>
+    </main>
+  </div>
+
+</body>
+<script>
+  (function () {
+    function setCookie(n, v, d) { var e = ''; if (d) { var t = new Date(); t.setTime(t.getTime() + d * 24 * 60 * 60 * 1000); e = ';expires=' + t.toUTCString() } document.cookie = n + '=' + encodeURIComponent(v || '') + e + ';path=/'; }
+    function getCookie(n) { var m = document.cookie.match('(^|;)\\s*' + n + '=([^;]+)'); return m ? decodeURIComponent(m[2]) : null }
+    var p = window.location.pathname;
+    if (p.indexOf('/UserDashboards/') !== -1 || /Dashboard/.test(p)) setCookie('lastDashboard', p, 7);
+    window.goHome = function () { var l = getCookie('lastDashboard'); window.location.href = l || '/'; }
+  })();
+</script>
+
+</html>

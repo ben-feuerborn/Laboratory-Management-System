@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+scrape_configs:
+  - job_name: 'inventory-management'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+    - targets: ['inventory-management:8081']
+  - job_name: 'test-sample-management'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+    - targets: ['test-sample-management:8082']
+  - job_name: 'patient-provider-management'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+    - targets: ['patient-provider-management:8083']

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Error</title>
+  <link rel="stylesheet" th:href="@{/patient-provider/css/system.css}" />
+  <style>
+    .error-wrapper { max-width: 600px; margin: 80px auto; background: #fff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    h1 { margin: 0 0 12px; font-size: 24px; }
+    pre { background:#f8fafc; padding:12px; border-radius:8px; overflow-x:auto; font-size:12px; }
+    a.btn { display:inline-block; margin-top:16px; }
+  </style>
+</head>
+<body>
+  <div class="error-wrapper">
+    <h1>Something went wrong</h1>
+    <p th:text="${message}">Unexpected server error.</p>
+    <pre th:if="${trace}" th:text="${trace}"></pre>
+    <a href="/patient-provider" class="btn">Back to Dashboard</a>
+  </div>
+</body>
+</html>
+

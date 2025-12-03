@@ -1,0 +1,26 @@
+/* Copied responsive system styles from inventory-management/system.css (trimmed to essentials) */
+:root {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --danger: #ef4444;
+  --success: #10b981;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+html, body { height: 100%; margin: 0; background: var(--bg); color: #111827; }
+.app { display: grid; grid-template-rows: 64px 1fr; padding: 16px; gap: 16px; height: 100vh; box-sizing: border-box; }
+header.topbar { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, var(--card), #f8fafc); padding: 12px 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05); }
+.brand { display: flex; gap: 12px; align-items: center; }
+.logo { width: 44px; height: 44px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), #7c3aed); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
+.nav-actions { display: flex; gap: 12px; align-items: center; }
+.icon-btn { background: transparent; border: 0; padding: 8px; border-radius: 8px; cursor: pointer; }
+.card { background: var(--card); padding: 14px; border-radius: 10px; box-shadow: 0 1px 4px rgba(2, 6, 23, 0.04); }
+.container { width: 100%; max-width: 1200px; }
+.btn { display: inline-block; padding: 8px 12px; border-radius: 8px; background: var(--accent); color: white; text-decoration: none; font-weight: 600; border: 0; cursor: pointer; }
+
+/* Responsive adjustments */
+@media (max-width: 1100px) { .main { grid-template-columns: 1fr 360px; } }
+@media (max-width: 760px) { .main { grid-template-columns: 1fr; } .sidebar { order: 2; } }
+

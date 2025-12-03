@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>CLMS - Specimen Collector: Test & Sample Management</title>
+
+  <link rel="stylesheet" th:href="@{/css/system.css}">
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+          <div class="title">Clinical Lab Management</div>
+          <div class="subtitle">Specimen Collector Sub Menu</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn">⚙️</button>
+        <button class="btn" onclick="history.back()">Back</button>
+        <button class="btn" onclick="goHome()">Home</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-dash">
+      <section class="module-grid">
+        <a class="module-card" th:href="@{/test-sample/collect-sample}">
+          <!-- ../TestandSampleManagementPages/CollectSample.html -->
+          <h2>🧪 Sample Collection</h2>
+          <p>Record collected specimen details.</p>
+        </a>
+
+        <a class="module-card future" th:href="@{/test-sample/}">
+          <!-- sample-tracking.html -->
+          <h2>📍 Track Samples</h2>
+          <p>Monitor sample status from collection to testing.</p>
+        </a>
+
+      </section>
+    </main>
+  </div>
+</body>
+<script>
+  (function () {
+    function setCookie(n, v, d) { var e = ''; if (d) { var t = new Date(); t.setTime(t.getTime() + d * 24 * 60 * 60 * 1000); e = ';expires=' + t.toUTCString() } document.cookie = n + '=' + encodeURIComponent(v || '') + e + ';path=/'; }
+    function getCookie(n) { var m = document.cookie.match('(^|;)\\s*' + n + '=([^;]+)'); return m ? decodeURIComponent(m[2]) : null }
+    var p = window.location.pathname;
+    if (p.indexOf('/UserDashboards/') !== -1 || /Dashboard/.test(p)) setCookie('lastDashboard', p, 7);
+    window.goHome = function () { var l = getCookie('lastDashboard'); window.location.href = l || '/'; }
+  })();
+</script>
+
+</html>

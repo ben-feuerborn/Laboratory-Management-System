@@ -1,0 +1,54 @@
+server:
+  port: 8071
+
+# Enable service discovery
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    discovery:
+      enabled: true
+    gateway:
+      routes:
+        - id: inventory-management
+          uri: lb://inventory-management
+          predicates:
+            - Path=/inventory/**
+          filters:
+            - StripPrefix=1
+        - id: test-sample-management
+          uri: lb://test-sample-management
+          predicates:
+            - Path=/test-sample/**
+          filters:
+            - StripPrefix=1
+        - id: patient-provider-management
+          uri: lb://patient-provider-management
+          predicates:
+            - Path=/patient-provider/**
+          filters:
+            - StripPrefix=1
+
+# Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8070/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+# Distributed Tracing Configuration
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+logging:
+  level:
+    io:
+      micrometer:
+        tracing: INFO
+    zipkin2: INFO

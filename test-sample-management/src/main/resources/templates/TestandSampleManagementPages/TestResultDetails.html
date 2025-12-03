@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clinical Lab - Test Result Details</title>
+  <link rel="stylesheet" th:href="@{/css/system.css}" href="/css/system.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    .app { padding: 16px; }
+    .card { padding: 20px; border-radius: 10px; background: var(--card); box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    h1.page-title { font-size: 24px; color: var(--accent); margin-bottom: 12px; }
+    .section { margin-bottom: 16px; }
+    .section label { font-weight: 600; display: block; margin-bottom: 4px; }
+    .section span { display: block; font-weight: 400; color: #111827; padding: 6px 0; }
+    .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .full-width { grid-column: 1 / -1; }
+    @media(max-width: 768px) { .two-columns { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- Dashboard Header -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">CL</div>
+      <div>
+        <div style="font-weight:700">Clinical Lab Management</div>
+        <div class="muted-small">View Test Results</div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="icon-btn" title="Settings">⚙️</button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="text-align:right">
+          <div style="font-weight:700">Username</div>
+          <div class="muted-small">Patient/Physician</div>
+        </div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#e6eefc;display:flex;align-items:center;justify-content:center">UN</div>
+      </div>
+        <div>
+          <button class="btn" onclick="goHome()">Home</button>
+        </div>
+        <div>
+          <button class="btn" onclick="history.back()">Back</button>
+        </div>
+    </div>
+  </header>
+
+  <div class="app">
+    <div class="main column-left">
+      <div class="card">
+        <h1 class="page-title">Test Result Details</h1>
+        
+        <!-- Report Information -->
+        <div class="section two-columns">
+          <div><label>Report ID</label><span id="reportId"></span></div>
+          <div><label>Report Date/Time</label><span id="reportDateTime"></span></div>
+        </div>
+
+        <!-- Patient Information -->
+        <div class="section">
+          <h2>Patient Information</h2>
+          <div class="two-columns">
+            <div><label>Patient ID</label><span id="patientId"></span></div>
+            <div><label>Patient Name</label><span id="patientName"></span></div>
+            <div><label>Date of Birth</label><span id="dob"></span></div>
+            <div><label>Sex</label><span id="sex"></span></div>
+          </div>
+        </div>
+
+        <!-- Physician Information -->
+        <div class="section">
+          <h2>Physician Information</h2>
+          <div class="two-columns">
+            <div><label>Physician ID</label><span id="physicianId"></span></div>
+            <div><label>Physician Name</label><span id="physicianName"></span></div>
+          </div>
+        </div>
+
+        <!-- Sample/Test Information -->
+        <div class="section">
+          <h2>Sample/Test Information</h2>
+          <div class="two-columns">
+            <div><label>Sample Type</label><span id="sampleType"></span></div>
+            <div><label>Sample ID</label><span id="sampleId"></span></div>
+            <div><label>Collection Date/Time</label><span id="collectionDateTime"></span></div>
+            <div><label>Collected By</label><span id="collectedBy"></span></div>
+            <div><label>Testing Technician</label><span id="testingTechnician"></span></div>
+            <div class="full-width"><label>Machine Used</label><span id="machineUsed"></span></div>
+          </div>
+        </div>
+
+        <!-- Test Results -->
+        <div class="section">
+          <h2>Test Results</h2>
+          <div class="two-columns">
+            <div><label>Test Name</label><span id="testName"></span></div>
+            <div><label>Result Value</label><span id="resultValues"></span></div>
+            <div><label>Units</label><span id="units"></span></div>
+            <div><label>Reference Range</label><span id="referenceRange"></span></div>
+            <div><label>Result Status</label><span id="resultStatus"></span></div>
+            <div><label>Results Received Date/Time</label><span id="resultsReceivedDateTime"></span></div>
+          </div>
+        </div>
+
+        <!-- Insurance Information -->
+        <div class="section">
+          <h2>Insurance Information</h2>
+          <div class="two-columns">
+            <div><label>Insurance Provider</label><span id="insuranceProvider"></span></div>
+            <div><label>Policy Number</label><span id="insurancePolicy"></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load a single test result by id from the REST API and populate the page.
+    async function loadTestResultDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      const card = document.querySelector('.card');
+      function showMessage(msg) {
+        if (!card) return;
+        const el = document.createElement('div');
+        el.style.padding = '12px';
+        el.style.marginBottom = '12px';
+        el.style.background = '#fff3cd';
+        el.style.border = '1px solid #ffeeba';
+        el.style.borderRadius = '8px';
+        el.textContent = msg;
+        card.insertBefore(el, card.firstChild);
+      }
+
+      if (!id) {
+        showMessage('No test result id provided in the URL.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/test-results/' + encodeURIComponent(id));
+        if (!res.ok) {
+          showMessage('Test result not found (id: ' + id + ').');
+          return;
+        }
+
+        const t = await res.json();
+
+        function set(id, value) {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.textContent = value != null ? value : '';
+        }
+
+        set('reportId', t.reportID || t.testID || '');
+        set('reportDateTime', t.reportDateTime ? new Date(t.reportDateTime).toLocaleString() : '');
+
+        set('patientId', t.patientID || '');
+        set('patientName', t.patientName || '');
+        set('dob', t.dob ? new Date(t.dob).toLocaleDateString() : '');
+        set('sex', t.gender || '');
+
+        set('physicianId', t.physicianID || '');
+        set('physicianName', t.physicianName || '');
+
+        set('sampleType', t.sampleType || '');
+        set('sampleId', t.sampleID || '');
+        set('collectionDateTime', t.collectionDateTime ? new Date(t.collectionDateTime).toLocaleString() : '');
+        set('collectedBy', t.collectedBy || '');
+        set('testingTechnician', t.testPerformedBy || '');
+        set('machineUsed', t.machine || '');
+
+        set('testName', t.testName || '');
+        set('resultValues', t.resultValues || '');
+        set('units', t.units || '');
+        set('referenceRange', t.referenceRange || '');
+        set('resultStatus', t.resultStatus || '');
+        set('resultsReceivedDateTime', t.resultsReceivedDateTime ? new Date(t.resultsReceivedDateTime).toLocaleString() : '');
+
+        set('insuranceProvider', t.insuranceProvider || '');
+        set('insurancePolicy', t.insurancePolicy || '');
+
+      } catch (err) {
+        console.error('Error loading test result:', err);
+        showMessage('An error occurred while loading the test result. See console for details.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTestResultDetails);
+  </script>
+
+</body>
+<script>
+  (function(){
+    function setCookie(n,v,d){var e='';if(d){var t=new Date();t.setTime(t.getTime()+d*24*60*60*1000);e=';expires='+t.toUTCString()}document.cookie=n+'='+encodeURIComponent(v||'')+e+';path=/';}
+    function getCookie(n){var m=document.cookie.match('(^|;)\\s*'+n+'=([^;]+)');return m?decodeURIComponent(m[2]):null}
+    var p=window.location.pathname;
+    if(p.indexOf('/UserDashboards/')!==-1 || /Dashboard/.test(p)) setCookie('lastDashboard',p,7);
+    window.goHome=function(){var l=getCookie('lastDashboard');window.location.href=l||'/';}
+  })();
+</script>
+</html>

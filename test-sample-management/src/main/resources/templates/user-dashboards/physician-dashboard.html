@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>CLMS - Physician Dashboard</title>
+
+  <link rel="stylesheet" th:href="@{/css/system.css}">
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+          <div class="title">Clinical Lab Management</div>
+          <div class="subtitle">Physician Dashboard</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn">⚙️</button>
+        <button class="btn" onclick="history.back()">Back</button>
+        <button class="btn" onclick="goHome()">Home</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="dashboard-layout">
+
+        <!-- LEFT SIDE -->
+        <div class="left-column">
+
+          <!-- SUMMARY CARDS -->
+          <div class="summary-grid">
+            <div class="menu-card">
+              <h2>52</h2>
+              <p>My Patients</p>
+            </div>
+            <div class="menu-card">
+              <h2>8</h2>
+              <p>Pending Lab Results</p>
+            </div>
+            <div class="menu-card">
+              <h2>2</h2>
+              <p>Critical Flags</p>
+            </div>
+            <div class="menu-card">
+              <h2>14</h2>
+              <p>Reports Signed</p>
+            </div>
+          </div>
+
+          <!-- MODULE CARDS -->
+          <section class="module-grid">
+            <a class="module-card" th:href="@{/inventory}">
+              <!-- ../TestandSampleManagementPages/PatientList.html -->
+              <h2>View Patient Results</h2>
+            </a>
+            <a class="module-card" th:href="@{/inventory}">
+              <!-- ../TestandSampleManagementPages/OrderTestPhysician.html -->
+              <h2>Order New Tests</h2>
+            </a>
+            <a class="module-card" th:href="@{/test-sample/test-results/add}">
+              <!-- ../TestandSampleManagementPages/EnterTestRequests.html -->
+              <h2>Test Results</h2>
+            </a>
+            <a class="module-card future" th:href="@{/}">
+              <h2>Review Critical Flags</h2>
+            </a>
+            <a class="module-card future" th:href="@{/}">
+              <h2>Download Reports</h2>
+            </a>
+          </section>
+
+          <!-- TABLE -->
+
+        </div>
+
+        <!-- RIGHT SIDE: NOTIFICATIONS PANEL -->
+        <aside class="notifications">
+          <h2>Notifications</h2>
+          <div class="notif-card warning">
+            <h3>Pending Test Results</h3>
+            <p>2 lab results require attention..</p>
+            <span class="time">2 hours ago</span>
+          </div>
+        </aside>
+
+      </div>
+
+      <!-- start here -->
+      <section class="column-left">
+
+        <!-- Recent results list -->
+        <div class="list">
+          <h3>Recent Lab Results</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Test</th>
+                <th>Status</th>
+                <th>Flag</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>John Doe</td>
+                <td>CBC</td>
+                <td>Validated</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Jane Smith</td>
+                <td>Urinalysis</td>
+                <td>Pending</td>
+                <td>High Glucose</td>
+              </tr>
+              <tr>
+                <td>Mark Lee</td>
+                <td>COVID PCR</td>
+                <td>Validated</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+      <!-- end here -->
+
+    </main>
+  </div>
+  <script>
+    (function () {
+      function setCookie(n, v, d) { var e = ''; if (d) { var t = new Date(); t.setTime(t.getTime() + d * 24 * 60 * 60 * 1000); e = ';expires=' + t.toUTCString() } document.cookie = n + '=' + encodeURIComponent(v || '') + e + ';path=/'; }
+      function getCookie(n) { var m = document.cookie.match('(^|;)\\s*' + n + '=([^;]+)'); return m ? decodeURIComponent(m[2]) : null }
+      var p = window.location.pathname; if (p && p.startsWith('/UserDashboards/')) { setCookie('lastDashboard', p, 7); console.log('lastDashboard set to', p); }
+      window.goHome = function () { var l = getCookie('lastDashboard'); console.log('goHome ->', l); window.location.href = l || '/UserDashboards/InventoryDashboard.html'; }
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Patient</title>
+
+    <!-- Global CLMS Styles -->
+    <link rel="stylesheet" th:href="@{/patient-provider/css/system.css}">
+
+    <!-- Page-Specific Styles -->
+    <link rel="stylesheet" th:href="@{/patient-provider/css/add-patient.css}">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">CL</div>
+                <div>
+                    <div class="title">Clinical Lab Management</div>
+                    <div class="subtitle">Add Patient</div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn" title="Settings">⚙️</button>
+                <button class="btn" onclick="history.back()" type="button">Back</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="container">
+                <div class="card form-card">
+                    <h1>Add New Patient</h1>
+
+                    <form th:action="@{/patient-provider/save}" th:object="${patient}" method="post">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" th:field="*{firstName}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" th:field="*{lastName}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth</label>
+                            <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <input type="text" id="gender" th:field="*{gender}" placeholder="M/F/Other">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="text" id="phone" th:field="*{phone}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" th:field="*{email}">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" th:field="*{address}">
+                        </div>
+                        <div class="form-group">
+                            <label for="medicalHistory">Medical History</label>
+                            <textarea id="medicalHistory" th:field="*{medicalHistory}" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="provider">Provider</label>
+                            <input type="text" id="provider" th:field="*{provider}" placeholder="Assigned provider">
+                        </div>
+                        <div class="form-group">
+                            <label for="registeredDate">Registered Date</label>
+                            <input type="date" id="registeredDate" th:field="*{registeredDate}">
+                        </div>
+                        <button type="submit" class="btn add-btn">Add Patient</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+
+</html>

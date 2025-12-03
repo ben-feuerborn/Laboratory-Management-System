@@ -1,0 +1,176 @@
+/* Patient & Provider Management page-specific styles
+   Builds on system.css variables and components for a fluid, responsive layout */
+
+:root { /* inherit variables from system.css */ }
+
+/* Overall page spacing - align with dashboard pages (padding handled by .app) */
+body {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Make this page use a single-column main layout (no sidebar) */
+.main { grid-template-columns: 1fr; }
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.page-title {
+  margin: 0;
+}
+
+/* Toolbar layout */
+.toolbar-card {
+  padding: 0; /* inner toolbar handles spacing */
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+}
+.control-label {
+  font-weight: 600;
+  color: var(--muted);
+}
+.control-select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+.toolbar-actions {
+  display: flex;
+  gap: 10px;
+}
+.status {
+  margin-left: auto;
+  font-weight: 600;
+}
+
+/* Button variants on top of .btn from system.css */
+.btn.secondary {
+  background: #0ea5e9; /* cyan-500 */
+}
+.btn.danger {
+  background: var(--danger);
+}
+.btn:hover { filter: brightness(0.96); }
+
+/* Dataset explain card */
+.dataset-explain {
+  padding: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Table container for horizontal scroll and sticky header */
+.table-card { padding: 0; }
+.table-wrap {
+  width: 100%;
+  overflow: auto;
+}
+.table-wrap table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 1;
+}
+
+/* Columns and inputs */
+.checkbox-col {
+  width: 44px;
+  text-align: center;
+}
+.table-wrap table tbody tr:hover {
+  background: #f8fafc;
+}
+.table-wrap table tbody tr:nth-child(even) {
+  background: #fbfdff;
+}
+.table-wrap table tbody tr:hover td {
+  transition: background 120ms ease-out;
+}
+.table-wrap table td input[type="text"],
+.table-wrap table td input:not([type]) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+.table-wrap table td input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  background: #ffffff;
+}
+
+/* Search row below primary toolbar */
+.searchbar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px 12px 12px;
+  border-top: 1px solid #f1f5f9;
+}
+.searchbar-row .search {
+  flex: 1 1 auto;
+}
+
+/* Yellow Filter button */
+.filter-btn {
+  background: #f59e0b; /* amber-500 */
+  color: #111827;
+}
+.filter-btn:hover { filter: brightness(0.96); }
+
+/* Modal styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+.modal {
+  background: var(--card);
+  border-radius: 12px;
+  width: min(720px, 92vw);
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  overflow: hidden;
+}
+.modal-header, .modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #eef2f7;
+}
+.modal-footer { border-top: 1px solid #eef2f7; border-bottom: 0; }
+.modal-body { padding: 12px; display: grid; gap: 12px; }
+.field { display: grid; gap: 6px; }
+.range-row { display: flex; align-items: center; gap: 10px; }
+.range-row input[type="range"] { flex: 1; }
+.range-labels { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+
+/* Ensure hidden modal is not displayed */
+.modal-backdrop[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .toolbar { gap: 8px; }
+  .toolbar-actions { width: 100%; }
+  .status { width: 100%; margin-left: 0; }
+}
+@media (max-width: 520px) {
+  .modal { width: 96vw; }
+  .searchbar-row { flex-wrap: wrap; }
+}

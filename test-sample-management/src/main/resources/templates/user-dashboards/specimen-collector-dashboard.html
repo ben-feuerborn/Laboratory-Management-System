@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <title>CLMS - Specimen Collector Dashboard</title>
+
+  <link rel="stylesheet" th:href="@{/css/system.css}">
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- Top Navigation -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CL</div>
+        <div>
+          <div class="title">Clinical Lab Management</div>
+          <div class="subtitle">Specimen Collector Dashboard</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn">⚙️</button>
+        <button class="btn" onclick="history.back()">Back</button>
+        <button class="btn" onclick="goHome()">Home</button>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main>
+      <div class="dashboard-layout">
+
+        <!-- LEFT SIDE -->
+        <div class="left-column">
+
+          <!-- SUMMARY CARDS -->
+          <div class="summary-grid">
+            <div class="menu-card">
+              <h2>48</h2>
+              <p>Samples Collected Today</p>
+            </div>
+            <div class="menu-card">
+              <h2>12</h2>
+              <p>Pending Pickups</p>
+            </div>
+            <div class="menu-card">
+              <h2>8</h2>
+              <p>Pending Tests</p>
+            </div>
+            <div class="menu-card">
+              <h2>2</h2>
+              <p>Supply Alerts</p>
+            </div>
+          </div>
+
+          <!-- MODULE CARDS -->
+          <section class="module-grid">
+            <a class="module-card" th:href="@{/test-sample/specimen-collector/menu}">
+              <h2>Test & Sample Management</h2>
+            </a>
+            <a class="module-card future" th:href="@{/inventory}">
+              <h2>Inventory & Equipment</h2>
+            </a>
+          </section>
+
+        </div>
+
+        <!-- RIGHT SIDE: NOTIFICATIONS PANEL -->
+        <aside class="notifications">
+          <h2>Notifications</h2>
+          <div class="notif-card warning">
+            <h3>Sample Tubes Low</h3>
+            <p>Reorder suggested.</p>
+            <span class="time">2 hours ago</span>
+          </div>
+          <div class="notif-card critical">
+            <h3>Pending Pickup Overdue</h3>
+            <p>Sample #1023</p>
+            <span class="time">Today</span>
+          </div>
+        </aside>
+
+      </div>
+    </main>
+
+  </div>
+  <script>
+    (function () {
+      function setCookie(n, v, d) { var e = ''; if (d) { var t = new Date(); t.setTime(t.getTime() + d * 24 * 60 * 60 * 1000); e = ';expires=' + t.toUTCString() } document.cookie = n + '=' + encodeURIComponent(v || '') + e + ';path=/'; }
+      function getCookie(n) { var m = document.cookie.match('(^|;)\\s*' + n + '=([^;]+)'); return m ? decodeURIComponent(m[2]) : null }
+      var p = window.location.pathname; if (p && p.startsWith('/UserDashboards/')) { setCookie('lastDashboard', p, 7); console.log('lastDashboard set to', p); }
+      window.goHome = function () { var l = getCookie('lastDashboard'); console.log('goHome ->', l); window.location.href = l || '/UserDashboards/InventoryDashboard.html'; }
+    })();
+  </script>
+</body>
+
+</html>
