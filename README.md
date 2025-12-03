@@ -5,7 +5,6 @@ This project is a microservices-based Laboratory Management System. It includes 
 ## Running the Application
 Use the following commands to build and start the application locally using Docker:
 ```bash
-mvn clean package -DskipTests
 docker compose up --build -d
 ```
 
@@ -18,7 +17,6 @@ docker compose down
 Use the following commands for rapidly stopping and starting the application locally using Docker:
 ``` bash
 docker compose down
-mvn clean package -DskipTests
 docker compose up --build -d
 ```
 
