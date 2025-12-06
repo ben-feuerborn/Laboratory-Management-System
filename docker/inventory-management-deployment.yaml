@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.image-pull-policy: IfNotPresent
+    kompose.service.type: ClusterIP
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: inventory-management
+  name: inventory-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: inventory-management
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.image-pull-policy: IfNotPresent
+        kompose.service.type: ClusterIP
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/clinic-net: "true"
+        io.kompose.service: inventory-management
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: pass
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://postgres:5432/clinicdb
+        - name: SPRING_DATASOURCE_USERNAME
+          value: user
+        - name: SPRING_PROFILES_ACTIVE
+          value: docker
+        image: inventory-management
+        imagePullPolicy: IfNotPresent
+        name: inventory-management
+        ports:
+        - containerPort: 8081
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

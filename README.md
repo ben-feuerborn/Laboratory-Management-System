@@ -8,6 +8,9 @@ Use the following commands to build and start the application locally using Dock
 docker compose up --build -d
 ```
 
+Once the application is up, navigate to `http://localhost:8071` to interact with the **Laboratory Mangement System**.
+
+### Stopping the Application
 To cleanly shutdown the docker containers after start, use:
 ```bash
 docker compose down
@@ -87,3 +90,54 @@ Prometheus is used to collect metrics, and Grafana is used for visualization.
     - Click **Import** to view your dashboard with Micrometer metrics.
 
 Your monitoring dashboards are now ready to visualize metrics from all microservices.
+
+
+## Deploying the Application
+1. Start Minikube
+```bash
+minikube start --cpus=4 --memory=8192
+```
+
+2. Access Kubernetes
+```bash
+kubectl get pods --all-namespaces
+```
+
+3. Access Kubernetes Services
+```bash
+kubectl get services --all-namespaces
+```
+
+4. Convert docker-compose.yml
+```bash
+cd docker
+kompose convert
+```
+
+5. Install Postgres Database
+```bash
+helm install database bitnami/postgresql \
+--set nameOverride=postgres \
+--set global.postgresql.postgresqlDatabase=clinicdb \
+--set global.postgresql.postgresqlUsername=user \
+--set global.postgresql.postgresqlPassword=pass \
+--set global.postgresql.servicePort=5432 \
+--set service.type=LoadBalancer
+```
+
+6. Deploy the Eureka Server
+```bash
+kubectl apply -f eureka-server-service.yaml
+kubectl apply -f eureka-server-deployment.yaml
+```
+
+7. After a few minutes, deploy the rest of the services
+```bash
+kubectl apply -f .
+```
+
+8. Check the Logs
+```bash
+kubectl get pods --all-namespaces
+kubectl get services --all-namespaces
+```

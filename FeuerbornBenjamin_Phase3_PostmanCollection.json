@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "d3d0b3f0-5884-4c5f-8d76-9a35d1ffbd56",
+		"name": "Clinic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43879275"
+	},
+	"item": [
+		{
+			"name": "Patient Provider",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8071/patient-provider",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"patient-provider"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Inventory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8071/inventory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Sample Management",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8071/test-sample",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"test-sample"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Patient",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"dateOfBirth\": \"1990-05-14\",\n  \"gender\": \"F\",\n  \"phone\": \"555-3333\",\n  \"email\": \"jane.doe@clinic.test\",\n  \"address\": \"123 Wellness Way\",\n  \"medicalHistory\": \"No significant history\",\n  \"provider\":\"Mayo Clinic\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8071/patient-provider/api/patients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"patient-provider",
+						"api",
+						"patients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patients",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8071/patient-provider/api/patients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"patient-provider",
+						"api",
+						"patients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Provider",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"Dr. Dave Los\",\n    \"specialty\":\"Pediatrics\",\n    \"phone\":\"555-3333\",\n    \"email\":\"dave@clinic.net\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8071/patient-provider/api/providers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"patient-provider",
+						"api",
+						"providers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Providers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8071/patient-provider/api/providers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"patient-provider",
+						"api",
+						"providers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Medication",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"Chill Pill\",\n    \"dosage\":\"1000mg\",\n    \"frequency\":\"All the time\",\n    \"notes\":\"Take a chill pill yo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8071/patient-provider/api/medications",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"patient-provider",
+						"api",
+						"medications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Medications",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8071/patient-provider/api/medications",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8071",
+					"path": [
+						"patient-provider",
+						"api",
+						"medications"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

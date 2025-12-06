@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: null
+  name: clinic-net
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          io.kompose.network/clinic-net: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/clinic-net: "true"
